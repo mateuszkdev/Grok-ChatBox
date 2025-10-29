@@ -15,7 +15,9 @@ export const POST = async (request: NextResponse) => {
     const valid = bcrypt.compareSync(password, user.passwordHash);
     if (!valid) return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
 
-    const token = await jwt.createToken(user._id, {  role: 'user' });
+    const role = email === process.env.STATIC_ADMIN_EMAIL ? 'admin' : 'user';
+
+    const token = await jwt.createToken(user._id, { role });
     await setAuthCookie(token);
 
     return NextResponse.json({ message: 'Login successful', userName: user.name }, { status: 200 });

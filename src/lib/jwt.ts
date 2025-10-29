@@ -38,4 +38,14 @@ export default class JWT {
 
     }
 
+    public async isAdmin(token: string): Promise<boolean> {
+
+        const { payload } = await jwtDecrypt(token, this.key, {
+            issuer: process.env.JWT_ISSUER as string
+        })
+
+        return !!(payload.role === 'admin')
+
+    }
+
 }

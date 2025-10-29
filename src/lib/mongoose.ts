@@ -12,6 +12,7 @@ const userSchema = new Schema({
     email: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     passwordHash: { type: String, required: true },
+    active: { type: Boolean, default: false },
 })
 
 export const User = models.User || model("User", userSchema);
