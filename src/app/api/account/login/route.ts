@@ -17,8 +17,10 @@ export const POST = async (request: NextResponse) => {
 
     const role = email === process.env.STATIC_ADMIN_EMAIL ? 'admin' : 'user';
 
-    const token = await jwt.createToken(user._id, { role });
+    const token = await jwt.createToken(user._id, { role, active: user.active });
     await setAuthCookie(token);
+
+    console.log({ action: "loggin", user, role, email })
 
     return NextResponse.json({ message: 'Login successful', userName: user.name }, { status: 200 });
 

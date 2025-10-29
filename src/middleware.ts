@@ -7,11 +7,18 @@ export const middleware = async (request: NextRequest) => {
     if (!token) return NextResponse.redirect(new URL("/login", request.url))
 
     const check = await jwt.checkSession(token)
+    if (!check) return NextResponse.redirect(new URL("/login", request.url))
+
+    const data = await jwt.decryptToken(token)
+    if (data.role === "admin") return NextResponse.next()
+
     if (request.url.includes('admin')) {
-        const data = await jwt.decryptToken(token)
         if (data.role !== "admin") return NextResponse.redirect(new URL("/", request.url))
     }
-    else if (!check) return NextResponse.redirect(new URL("/login", request.url))
+
+    if (request.url.includes('chat')) {
+        if (!data.active) return NextResponse.redirect(new URL("/noaccess", request.url))
+    }
 
     return NextResponse.next()
 

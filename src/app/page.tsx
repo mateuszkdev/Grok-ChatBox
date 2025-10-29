@@ -25,7 +25,17 @@ export default function Home() {
         </h1>
 
         <p className="mb-12 text-xl text-muted-foreground text-balance animate-in fade-in duration-1000 delay-500">
-          Experience the future of conversation with {config.aiModel}
+          Experience the future of conversation with {config.aiModel} <br></br> <br></br>
+        <a
+          href="https://discord.gg/Q3cXmbMKSE"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 border border-[#5865F2] text-[#5865F2] px-4 py-2 rounded-lg hover:bg-[#5865F2]/10 transition-colors"
+        >
+          For access contact me at discord
+        </a>
+
+
         </p>
 
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-700">

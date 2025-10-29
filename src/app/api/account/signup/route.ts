@@ -21,10 +21,11 @@ export const POST = async (request: NextResponse) => {
         _id: id,
         email,
         name,
-        passwordHash
+        passwordHash,
+        active: false
     }).save();
 
-    const token = await jwt.createToken(id, { role: 'user' });
+    const token = await jwt.createToken(id, { role: 'user', active: false });
     await setAuthCookie(token);
     
     return NextResponse.json({ message: 'Signup successful' }, { status: 201 });
