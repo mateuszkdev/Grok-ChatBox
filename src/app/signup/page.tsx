@@ -23,6 +23,11 @@ export default function SignupPage() {
     setError("")
     setIsLoading(true)
 
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.")
+      return setIsLoading(false)
+    }
+
     const response = await fetch("/api/account/signup", {
         method: "POST",
         headers: {
@@ -33,8 +38,8 @@ export default function SignupPage() {
 
     const data = await response.json()
 
-    if (data.code && data.code !== 200) {
-      setError(data.message || "An error occurred. Please try again.")
+    if (data.error) {
+      setError(data.error || "An error occurred. Please try again.")
       return setIsLoading(false)
       
     }

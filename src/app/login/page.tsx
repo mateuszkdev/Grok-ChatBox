@@ -31,8 +31,8 @@ export default function LoginPage() {
 
     const data = await response.json()
 
-    if (data.code && data.code !== 200) {
-      setError(data.message || "An error occurred. Please try again.")
+    if (data.error) {
+      setError(data.error || "An error occurred. Please try again.")
       return setIsLoading(false)
     }
 
