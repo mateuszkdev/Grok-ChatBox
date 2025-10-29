@@ -18,6 +18,6 @@ export const POST = async (request: NextResponse) => {
     const token = await jwt.createToken(user._id, {  role: 'user' });
     await setAuthCookie(token);
 
-    return NextResponse.json({ message: 'Login successful' }, { status: 200 });
+    return NextResponse.json({ message: 'Login successful', userName: user.name }, { status: 200 });
 
 }

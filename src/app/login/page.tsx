@@ -38,6 +38,7 @@ export default function LoginPage() {
 
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
+    localStorage.setItem("userName", data.userName);
     router.push("/chat")
 
   }
