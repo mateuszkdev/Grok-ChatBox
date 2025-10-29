@@ -2,10 +2,10 @@
 
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
-import { ChatMessage } from "#/components/chat/message"
-import { Send, Loader2 } from "lucide-react"
 import Messages from "#/components/chat/messages"
 import Input from "#/components/chat/input"
+
+import { useChat } from "@ai-sdk/react"
 
 export interface Message {
   id: string
@@ -39,11 +39,13 @@ interface ChatInterfaceProps {
 
 export function ChatInterface({ currentSessionId }: ChatInterfaceProps) {
   
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messagesCache, setMessagesCache] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null!)
   const textareaRef = useRef<HTMLTextAreaElement>(null!)
+
+  const { messages, status, sendMessage } = useChat()
 
   // useEffect(() => {
   //   if (currentSessionId && MOCK_MESSAGES[currentSessionId]) {
@@ -66,33 +68,10 @@ export function ChatInterface({ currentSessionId }: ChatInterfaceProps) {
     e.preventDefault()
     if (!input.trim() || isLoading) return
 
-    setMessages((prev) => [...prev, {
-      id: Date.now().toString(),
-      role: "user",
-      content: input.trim(),
-      timestamp: new Date(),
-    }])
-
     setInput("")
     setIsLoading(true)
 
-    const response = await fetch("/api/grok", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ prompt: input.trim() })
-    })
-
-    const data = await response.json()
-
-    setMessages((prev) => [...prev, {
-      id: (Date.now() + 1).toString(),
-      role: "assistant",
-      content: data.response,
-      timestamp: new Date(),
-    }])
-
+    sendMessage({ text: input.trim() })
     setIsLoading(false)
 
   }
@@ -121,7 +100,7 @@ export function ChatInterface({ currentSessionId }: ChatInterfaceProps) {
         handleKeyDown={handleKeyDown}
         textareaRef={textareaRef}
       />
-      
+
     </div>
   )
 }

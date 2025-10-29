@@ -13,7 +13,7 @@ export function ChatMessage({ message, index }: ChatMessageProps) {
 
   const isUser = message.role === "user"
   const userName = localStorage.getItem("userName") || "You"
-  
+
   return (
     <div
       className={cn("flex items-start gap-3 animate-in fade-in slide-in-from-bottom-4", "duration-500")}
@@ -54,7 +54,11 @@ export function ChatMessage({ message, index }: ChatMessageProps) {
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold">{isUser ? userName : config.aiModel}</span>
           <span className="text-xs text-muted-foreground">
-            {message.timestamp.toLocaleTimeString([], {
+            {/* {message.timestamp.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })} */}
+            {new Date().toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
             })}
@@ -68,7 +72,7 @@ export function ChatMessage({ message, index }: ChatMessageProps) {
               : "bg-linear-gradient-to-br from-secondary/50 to-secondary/30 border border-white/10",
           )}
         >
-          <p className="whitespace-pre-wrap text-pretty">{message.content}</p>
+          <p className="whitespace-pre-wrap text-pretty">{(message as any).parts.filter((m: any) => m.type === "text").map((m: any) => m.text).join("\n")}</p>
         </div>
       </div>
     </div>

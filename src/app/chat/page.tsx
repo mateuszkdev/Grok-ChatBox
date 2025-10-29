@@ -16,7 +16,8 @@ const MOCK_SESSIONS = [
 
 export default function ChatPage() {
 
-  const userName = localStorage.getItem("userName") || "User";
+  // const userName = localStorage.getItem("userName") || "User";
+  const userName = "User";
 
   const [sessions, setSessions] = useState(MOCK_SESSIONS) // future implementation
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null)
