@@ -1,7 +1,8 @@
 import { jwt, setAuthCookie } from "#/lib/auth";
-import { conncetDB, User } from "#/lib/mongoose";
+import { conncetDB, User, UserAiEgoConfig } from "#/lib/mongoose";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { config } from "#/lib/config";
 
 export const POST = async (request: NextResponse) => {
 
@@ -19,6 +20,13 @@ export const POST = async (request: NextResponse) => {
 
     const token = await jwt.createToken(user._id, { role, active: user.active });
     await setAuthCookie(token);
+
+    if (!await UserAiEgoConfig.findOne({ userId: user._id })) {
+            await new UserAiEgoConfig({
+                userId: user._id,
+                aiEgo: config.defaultAiEgo
+            }).save();
+    }
 
     console.log({ action: "loggin", user, role, email })
 

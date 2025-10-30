@@ -1,7 +1,40 @@
-import { LogOut, Menu } from 'lucide-react'
-import React from 'react'
+"use client"
+import { LogOut, Menu, SettingsIcon } from 'lucide-react'
+import React, { useEffect, useState } from 'react'
+import Popup from "#/components/chat/aiEgoPopUp"
 
 export default function Header({ userName, setIsSidebarOpen, isSidebarOpen, handleLogout }: { userName: string; setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>; isSidebarOpen: boolean; handleLogout: () => void }) {
+  
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [aiEgo, setAiEgo] = useState<string>("")
+
+  // useEffect(() => {
+
+  //   fetch("/api/account/getAiEgo")
+  //     .then(res => res.json())
+  //     .then(json => {
+  //       console.log(json)
+  //       setAiEgo(json.aiEgo)
+  //     })
+  // }, [])
+
+  const handleAiEgoChange = async () => {
+    
+    const response = await fetch("/api/account/updateAiEgo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        aiEgo
+      })
+    })
+
+    const json = await response.json()
+    console.log({json})
+
+  }
+  
   return (
     <>
       <header className="border-b border-white/10 bg-background/80 backdrop-blur-xl animate-in fade-in slide-in-from-top-4 duration-500">
@@ -11,7 +44,7 @@ export default function Header({ userName, setIsSidebarOpen, isSidebarOpen, hand
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className="flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-secondary/50 lg:hidden"
             >
-              <Menu className="h-5 w-5" />
+            <Menu className="h-5 w-5" />
             </button>
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-gradient-to-br from-primary/20 to-primary/5">
               <svg className="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -31,11 +64,27 @@ export default function Header({ userName, setIsSidebarOpen, isSidebarOpen, hand
 
           <button
             onClick={handleLogout}
-            className="flex h-9 items-center gap-2 rounded-lg border border-white/10 bg-background/50 px-3 text-sm font-medium backdrop-blur-sm transition-all duration-300 hover:bg-background/80"
+            className="flex h-9 items-center gap-1 rounded-lg border border-white/10 bg-background/50 px-3 text-sm font-medium backdrop-blur-sm transition-all duration-300 hover:bg-background/80"
           >
             <LogOut className="h-4 w-4" />
             Logout
           </button>
+          <button
+            onClick={() => setIsOpen(true)}
+            className='flex h-9 items-center gap-1 rounded-lg border border-white/10 bg-background/50 px-3 text-sm font-medium backdrop-blur-sm transition-all duration-300 hover:bg-background/80'
+          >
+            <SettingsIcon className='h-4 w-4' />
+            Change AI Alterego
+          </button>
+
+          <Popup
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+            onConfirm={handleAiEgoChange}
+            inputValue={aiEgo}
+            onInputChange={e => setAiEgo((e.target as any).value)}
+          />
+
         </div>
       </header>
     </>

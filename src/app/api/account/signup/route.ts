@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { conncetDB, User } from "#/lib/mongoose";
+import { conncetDB, User, UserAiEgoConfig } from "#/lib/mongoose";
 import bcrypt from "bcrypt";
 import { jwt, setAuthCookie } from "#/lib/auth";
+import { config } from "#/lib/config";
 
 export const POST = async (request: NextResponse) => {
 
@@ -23,6 +24,11 @@ export const POST = async (request: NextResponse) => {
         name,
         passwordHash,
         active: false
+    }).save();
+
+    await new UserAiEgoConfig({
+        userId: id,
+        aiEgo: config.defaultAiEgo
     }).save();
 
     const token = await jwt.createToken(id, { role: 'user', active: false });

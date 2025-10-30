@@ -15,4 +15,10 @@ const userSchema = new Schema({
     active: { type: Boolean, default: false },
 })
 
+const userAIEgoConfig = new Schema({
+    userId: { type: String, required: true, unique: true },
+    aiEgo: { type: String, required: true }
+})
+
 export const User = models.User || model("User", userSchema);
+export const UserAiEgoConfig = models.UserAiEgoConfig || model("UserAiEgoConfig", userAIEgoConfig);
